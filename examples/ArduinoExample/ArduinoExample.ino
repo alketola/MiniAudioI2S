@@ -39,9 +39,9 @@ Antti Ketola 2026
 #define I2S_BCLK 5
 #define I2S_DIN  26
 
-// D17, a push button to pull down for a test beeps. 
+// Dxx, a push button to pull down for a test beeps. 
 // Please select a pin with input pull-up resistor option.
-#define PUSH_BUTTON_0 17 
+#define PUSH_BUTTON_0 GPIO_NUM_12
 
 const int frequency = 2200;    // frequency of generated wave in Hz
 const int amplitude = 32000;   // amplitude of wave
@@ -64,7 +64,8 @@ Tone t = Tone(&wg, &e, volume);
 void setup() {
   // Serial.begin(115200);
       ESP_LOGI("MINIAUDIO", "I2S Sound test with wave generator");
-  gpio_config(PUSH_BUTTON_0, INPUT_PULLUP); // the push button is expected to short the pin to GND when pressed
+      
+  pinMode(PUSH_BUTTON_0, INPUT_PULLUP); // the push button is expected to short the pin to GND when pressed
 
   i2s.setPins(I2S_BCLK, I2S_LRC, I2S_DIN);
   
@@ -91,7 +92,7 @@ void setup() {
 
 // Arduino main loop
 void loop() {
-  bool button_reading = gpio_get_level(PUSH_BUTTON_0); // digitalRead( active low; pushed = FALSE
+  bool button_reading = digitalRead(PUSH_BUTTON_0); // ESP32 gpio_get_level() works differently
 
   if(!button_reading) {  
     ESP_LOGI("MINIAUDIO","Beeping");
